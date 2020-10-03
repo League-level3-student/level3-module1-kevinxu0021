@@ -22,17 +22,17 @@ public class _05_LongChipCompetition {
 
 	public void run() {
 		double a = 0;
+		int b = 0;
 		for (int i = 0; i < theBeatles.size(); i++) {
 			for (int j = 0; j < theBeatles.get(i).getChips().size(); j++) {
-				//need to fix if statement
-				if (theBeatles.get(i).getChips().get(j).getLength() <= a) {
+				if (a <= theBeatles.get(i).getChips().get(j).getLength()) {
 					a = theBeatles.get(i).getChips().get(j).getLength();
-
+					b = i;
 				}
 			}
 
 		}
-		System.out.println(a);
+		System.out.println(theBeatles.get(b).getName());
 	}
 
 	private void initializeBeatles() {
