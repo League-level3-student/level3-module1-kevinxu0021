@@ -69,7 +69,7 @@ public class _02_TextUndoRedo implements KeyListener, ActionListener {
 			originalChar = new char[displayText.length()];
 			modifiedChar = new char[displayText.length() - 1];
 			originalChar = displayText.toCharArray();
-			deletedChars.add(blank + originalChar[originalChar.length]);
+			deletedChars.add(blank + originalChar[originalChar.length - 1]);
 			for (int i = 0; i < modifiedChar.length; i++) {
 				modifiedChar[i] = originalChar[i];
 			}
@@ -90,6 +90,7 @@ public class _02_TextUndoRedo implements KeyListener, ActionListener {
 			String storage;
 			storage = deletedChars.pop();
 			displayText = currentText + storage;
+			label.setText(displayText);
 		} else {
 			typedCharacter = e.getKeyChar();
 			System.out.println(displayText);
@@ -97,7 +98,6 @@ public class _02_TextUndoRedo implements KeyListener, ActionListener {
 			label.setText(displayText);
 			initialText = displayText;
 		}
-		// System.out.println(e.getKeyCode());
 	}
 
 	@Override
