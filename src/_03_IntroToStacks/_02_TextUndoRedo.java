@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Stack;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +29,11 @@ public class _02_TextUndoRedo implements KeyListener, ActionListener {
 	JPanel panel;
 	JLabel label;
 	char typedCharacter;
+	String displayText;
+	String initialText = "";
+	char[] originalChar;
+	char[] modifiedChar;
+	Stack<String> deletedChars = new Stack<String>();
 
 	_02_TextUndoRedo() {
 
@@ -42,6 +48,7 @@ public class _02_TextUndoRedo implements KeyListener, ActionListener {
 		frame = new JFrame();
 		panel = new JPanel();
 		label = new JLabel();
+		frame.addKeyListener(this);
 		panel.add(label);
 		frame.add(panel);
 		frame.setSize(900, 500);
@@ -57,7 +64,40 @@ public class _02_TextUndoRedo implements KeyListener, ActionListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			String blank = "";
+			originalChar = new char[displayText.length()];
+			modifiedChar = new char[displayText.length() - 1];
+			originalChar = displayText.toCharArray();
+			deletedChars.add(blank + originalChar[originalChar.length]);
+			for (int i = 0; i < modifiedChar.length; i++) {
+				modifiedChar[i] = originalChar[i];
+			}
+			blank = "";
+			if (modifiedChar.length == 0) {
+				displayText = blank;
+			} else {
+				for (int i = 0; i < modifiedChar.length; i++) {
+					displayText = blank + modifiedChar[i];
+					blank = displayText;
+				}
+			}
 
+			label.setText(displayText);
+			initialText = displayText;
+		} else if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+			String currentText = displayText;
+			String storage;
+			storage = deletedChars.pop();
+			displayText = currentText + storage;
+		} else {
+			typedCharacter = e.getKeyChar();
+			System.out.println(displayText);
+			displayText = initialText + typedCharacter;
+			label.setText(displayText);
+			initialText = displayText;
+		}
+		// System.out.println(e.getKeyCode());
 	}
 
 	@Override
@@ -69,8 +109,7 @@ public class _02_TextUndoRedo implements KeyListener, ActionListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		typedCharacter = e.getKeyChar();
-		
+
 	}
 
 }
