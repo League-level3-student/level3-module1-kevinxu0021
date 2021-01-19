@@ -22,8 +22,9 @@ public class HangMan implements ActionListener, KeyListener {
 	JPanel panel;
 	JLabel label;
 	JLabel lifeLabel;
-	int life = 20;
+	int life = 10;
 	String word;
+	String allMatches = "";
 
 	HangMan() {
 		utilities = new Utilities();
@@ -37,7 +38,7 @@ public class HangMan implements ActionListener, KeyListener {
 	}
 
 	void run() {
-		userInput = JOptionPane.showInputDialog("Enter a number from 1-266");
+		userInput = JOptionPane.showInputDialog("How many words would you like to guess? Enter a number from 1-266");
 		intUserInput = Integer.parseInt(userInput);
 		while (stack.size() < intUserInput) {
 			String temp = utilities.readRandomLineFromFile("dictionary.txt");
@@ -56,11 +57,11 @@ public class HangMan implements ActionListener, KeyListener {
 		label = new JLabel();
 		lifeLabel = new JLabel();
 		frame.add(panel);
-		panel.add(lifeLabel);
 		panel.add(label);
+		panel.add(lifeLabel);
 		lifeLabel.setText("Life left:" + life);
 		frame.setVisible(true);
-		frame.setSize(300, 500);
+		frame.setSize(200, 100);
 	}
 
 	void guess() {
@@ -87,8 +88,43 @@ public class HangMan implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		char typedChar;
+		String test = word;
+		boolean answer = false;
+		String regex;
 		typedChar = e.getKeyChar();
 		System.out.println(typedChar);
+		for (int i = 0; i < test.length(); i++) {
+			if (test.charAt(i) == typedChar) {
+				answer = true;
+			}
+		}
+		if (answer == true) {
+			allMatches += typedChar;
+			regex = "[^" + allMatches + "]";
+			test = test.replaceAll(regex, "_");
+			label.setText(test);
+			if (test == word) {
+				life = 10;
+				allMatches = "";
+				word = stack.pop();
+				int letters;
+				String displayText = "_";
+				String tempText = "_";
+				letters = word.length();
+				for (int i = 0; i < letters - 1; i++) {
+					displayText = tempText + "_";
+					tempText = displayText;
+				}
+				label.setText(displayText);
+			}
+		} else {
+			life--;
+			lifeLabel.setText("Life left:" + life);
+			if (life == 0) {
+				JOptionPane.showMessageDialog(null, "Game Over");
+
+			}
+		}
 	}
 
 	@Override
