@@ -16,7 +16,6 @@ public class HangMan implements ActionListener, KeyListener {
 	String userInput;
 	int intUserInput;
 	Stack<String> stack = new Stack<String>();
-	Utilities utilities;
 	boolean rerun = true;
 	JFrame frame;
 	JPanel panel;
@@ -25,9 +24,11 @@ public class HangMan implements ActionListener, KeyListener {
 	int life = 10;
 	String word;
 	String allMatches = "";
+	String retry;
+	int retry1;
 
 	HangMan() {
-		utilities = new Utilities();
+
 	}
 
 	public static void main(String[] args) {
@@ -41,7 +42,7 @@ public class HangMan implements ActionListener, KeyListener {
 		userInput = JOptionPane.showInputDialog("How many words would you like to guess? Enter a number from 1-266");
 		intUserInput = Integer.parseInt(userInput);
 		while (stack.size() < intUserInput) {
-			String temp = utilities.readRandomLineFromFile("dictionary.txt");
+			String temp = Utilities.readRandomLineFromFile("dictionary.txt");
 			if (!stack.contains(temp)) {
 				stack.add(temp);
 			}
@@ -103,27 +104,48 @@ public class HangMan implements ActionListener, KeyListener {
 			regex = "[^" + allMatches + "]";
 			test = test.replaceAll(regex, "_");
 			label.setText(test);
-			if (test == word) {
+			if (test.equals(word)) {
 				life = 10;
+				lifeLabel.setText("Life left:" + life);
 				allMatches = "";
-				word = stack.pop();
-				int letters;
-				String displayText = "_";
-				String tempText = "_";
-				letters = word.length();
-				for (int i = 0; i < letters - 1; i++) {
-					displayText = tempText + "_";
-					tempText = displayText;
+				if (stack.isEmpty() == true) {
+					retry = JOptionPane.showInputDialog(null,
+							"Congratulations, you have successfully guessed all words. Would you like to play another round? Enter 1 if you would like to play again, or enter 0 to stop playing. ");
+					retry1 = Integer.parseInt(retry);
+					if (retry1 == 1) {
+						run();
+						guess();
+					} else {
+						System.exit(0);
+					}
+				} else {
+					word = stack.pop();
+					int letters;
+					String displayText = "_";
+					String tempText = "_";
+					letters = word.length();
+					for (int i = 0; i < letters - 1; i++) {
+						displayText = tempText + "_";
+						tempText = displayText;
+					}
+					label.setText(displayText);
 				}
-				label.setText(displayText);
 			}
 		} else {
 			life--;
 			lifeLabel.setText("Life left:" + life);
 			if (life == 0) {
-				JOptionPane.showMessageDialog(null, "Game Over");
-
+				retry = JOptionPane.showInputDialog(
+						"Game Over. Would you like to retry? Enter 1 if you would like to retry, or enter 0 to stop playing. ");
+				retry1 = Integer.parseInt(retry);
+				if (retry1 == 1) {
+					run();
+					guess();
+				} else {
+					System.exit(0);
+				}
 			}
+
 		}
 	}
 
