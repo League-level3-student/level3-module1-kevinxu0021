@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -37,6 +38,7 @@ public class _02_LogSearch implements ActionListener {
 	JButton button1;
 	JButton button2;
 	JButton button3;
+	JButton button4;
 	String userIDInput;
 	String nameInput;
 	int IDInput;
@@ -59,16 +61,20 @@ public class _02_LogSearch implements ActionListener {
 		button1 = new JButton();
 		button2 = new JButton();
 		button3 = new JButton();
+		button4 = new JButton();
 		button1.setText("Add an Entry");
 		button2.setText("Search by ID");
 		button3.setText("View List");
+		button4.setText("Remove an Entry");
 		button1.addActionListener(this);
 		button2.addActionListener(this);
 		button3.addActionListener(this);
+		button4.addActionListener(this);
 		frame.add(panel);
 		panel.add(button1);
 		panel.add(button2);
 		panel.add(button3);
+		panel.add(button4);
 		frame.setVisible(true);
 		frame.pack();
 	}
@@ -93,7 +99,22 @@ public class _02_LogSearch implements ActionListener {
 			}
 
 		} else if (e.getSource().equals(button3)) {
-
+			String printText = "";
+			for(Integer i : log.keySet()) {
+				printText = printText +  "ID: " + i + " Name: " + log.get(i) + "\n";
+			}
+			JOptionPane.showMessageDialog(null, printText);
+		}else if(e.getSource().equals(button4)) {
+			String input;
+			int remove;
+			String a;
+			input = JOptionPane.showInputDialog("Enter the ID of the entry you want to remove");
+			remove = Integer.parseInt(input);
+			if(log.containsKey(remove) == true) {
+				a = log.remove(remove);
+			}else {
+				JOptionPane.showMessageDialog(null, "The ID does not exist in the list.");
+			}
 		}
 	}
 }
